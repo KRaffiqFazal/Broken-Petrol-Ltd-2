@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
+using System.Threading.Tasks; //^the above is imported by default when a class file is created in VS
+using System.Timers; //used for waiting and fuelling
 
 namespace Broken_Petrol_Ltd_2
 {
@@ -24,7 +24,7 @@ namespace Broken_Petrol_Ltd_2
             waitingTime.AutoReset = false;
             waitingTime.Enabled = true;
             waitingTime.Elapsed += WaitingTime_Elapsed;
-            //vehicleID = somethingFromMain
+            vehicleID = value;
 
         }
 
@@ -35,7 +35,7 @@ namespace Broken_Petrol_Ltd_2
     }
     internal class Car : Vehicle
     {
-        public Car()
+        public Car(int value) : base(value) //cars will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
         {
             type = "Car";
             maxFuelCapacity = 50;
@@ -43,7 +43,7 @@ namespace Broken_Petrol_Ltd_2
     }
     internal class Van : Vehicle
     {
-        public Van()
+        public Van(int value) : base(value)//vans will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
         {
             type = "Van";
             maxFuelCapacity = 80;
@@ -51,7 +51,7 @@ namespace Broken_Petrol_Ltd_2
     }
     internal class HGV : Vehicle
     {
-        public HGV()
+        public HGV(int value) : base(value)//HGVs will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
         {
             type = "HGV";
             maxFuelCapacity = 150;
