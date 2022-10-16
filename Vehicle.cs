@@ -20,7 +20,7 @@ namespace Broken_Petrol_Ltd_2
         public Vehicle(int value)
         {
             Random rnd = new Random();
-            waitingTime = new(rnd.Next(1500, 2200));
+            waitingTime = new(rnd.Next(1000, 2000));
             waitingTime.AutoReset = false;
             waitingTime.Enabled = true;
             waitingTime.Elapsed += WaitingTime_Elapsed;
