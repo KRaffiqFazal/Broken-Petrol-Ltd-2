@@ -7,10 +7,12 @@ namespace Broken_Petrol_Ltd_2
 
     class Program
     {
-        static void Main(string[] args)
-        { 
-        
+        public static int carCounter = 0;
 
+        static void Main(string[] args)
+        {
+
+            Vehicle newVehicle = new Vehicle(carCounter);
 
         }
     }
