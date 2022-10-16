@@ -14,4 +14,25 @@ namespace Broken_Petrol_Ltd_2
         
         }
     }
+    internal class Car : Vehicle
+    {
+        public Car()
+        { 
+        
+        }
+    }
+    internal class Van : Vehicle
+    {
+        public Van()
+        { 
+        
+        }
+    }
+    internal class HGV : Vehicle
+    {
+        public HGV()
+        { 
+        
+        }
+    }
 }
