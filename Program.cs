@@ -8,7 +8,7 @@ namespace Broken_Petrol_Ltd_2
     class Program
     {
         public static int carCounter = 0;
-        //public static var existingVehicles = new ArrayList();
+        public static ArrayList existingVehicles = new ArrayList();
         
         static void Main(string[] args)
         {
@@ -27,16 +27,17 @@ namespace Broken_Petrol_Ltd_2
         {
             if (carType == 0)
             {
-
+                existingVehicles.Add(new Car(carCounter));
             }
             else if (carType == 1)
             {
-
+                existingVehicles.Add(new Van(carCounter));
             }
             else
-            { 
-                
+            {
+                existingVehicles.Add(new HGV(carCounter));
             }
+            carCounter++;
         }
     }
 
