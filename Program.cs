@@ -1,7 +1,5 @@
-﻿using System;
-using System.Timers; //used for waiting and fuelling
+﻿//used for waiting and fuelling
 using System.Collections; //used for Arraylists
-using System.Threading;
 
 namespace Broken_Petrol_Ltd_2
 {
@@ -14,15 +12,12 @@ namespace Broken_Petrol_Ltd_2
         {
 
             Random rnd = new Random();
-            System.Timers.Timer carAdder = new System.Timers.Timer(CarAdder_Elapsed, null, 0, rnd.Next(1500, 2200));
-            carAdder.AutoReset = true;
-            carAdder.Enabled = true;
-            carAdder.Start();
+            Timer carAdder = new Timer(CarAdder, null, 0, rnd.Next(1500, 2200));
             int choice = rnd.Next(0, 3);
 
         }
 
-        void CarAdder_Elapsed(object o)
+        void CarAdder(object o)
         {
             Random rnd = new Random();
             int carType = rnd.Next(0, 3);

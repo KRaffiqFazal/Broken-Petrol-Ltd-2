@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks; //^the above is imported by default when a class file is created in VS
-using System.Timers; //used for waiting and fuelling
-
-namespace Broken_Petrol_Ltd_2
+﻿namespace Broken_Petrol_Ltd_2
 {
     internal class Vehicle
     {
@@ -21,7 +14,7 @@ namespace Broken_Petrol_Ltd_2
         public Vehicle(int value)
         {
             Random rnd = new Random();
-            waitingTime = new System.Timers.Timer(WaitingTime_Elapsed, null, 0, rnd.Next(1000, 2000));
+            waitingTime = new Timer(WaitingTime_Elapsed, null, 0, rnd.Next(1000, 2000));
             waitingTime.AutoReset = false;
             waitingTime.Enabled = true;
             vehicleID = value;
