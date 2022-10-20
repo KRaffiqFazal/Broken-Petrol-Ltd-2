@@ -39,6 +39,16 @@
             fuellingTime.Change(0, fuellingTimeInt);
             waitingTime.Dispose();
         }
+        public void SpecificVehicle(String model, int maxFuel)
+        {
+            Random rnd = new Random();
+            int temp;
+            type = model;
+            maxFuelCapacity = maxFuel;
+            fuelInTank = rnd.Next(5, maxFuelCapacity / 2);
+            temp = Convert.ToInt32(Math.Floor((maxFuelCapacity - fuelInTank) / 1.5));
+            fuellingTimeInt = rnd.Next(1000, temp);
+        }
 
 
     }
@@ -46,39 +56,21 @@
     {
         public Car(int value) : base(value) //cars will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
         {
-            Random rnd = new Random();
-            int temp;
-            type = "Car";
-            maxFuelCapacity = 50;
-            fuelInTank = rnd.Next(5, maxFuelCapacity / 2);
-            temp = Convert.ToInt32(Math.Floor((maxFuelCapacity - fuelInTank) / 1.5));
-            fuellingTimeInt = rnd.Next(1000, temp);
+            SpecificVehicle("Car", 50);
         }
     }
     internal class Van : Vehicle
     {
         public Van(int value) : base(value)//vans will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
         {
-            Random rnd = new Random();
-            int temp;
-            type = "Van";
-            maxFuelCapacity = 80;
-            fuelInTank = rnd.Next(5, maxFuelCapacity / 2);
-            temp = Convert.ToInt32(Math.Floor((maxFuelCapacity - fuelInTank) / 1.5));
-            fuellingTimeInt = rnd.Next(1000, temp);
+            SpecificVehicle("Van", 80);
         }
     }
     internal class HGV : Vehicle
     {
         public HGV(int value) : base(value)//HGVs will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
         {
-            Random rnd = new Random();
-            int temp;
-            type = "HGV";
-            maxFuelCapacity = 150;
-            fuelInTank = rnd.Next(5, maxFuelCapacity / 2);
-            temp = Convert.ToInt32(Math.Floor((maxFuelCapacity - fuelInTank) / 1.5));
-            fuellingTimeInt = rnd.Next(1000, temp);
+            SpecificVehicle("HGV", 150);
         }
     }
 }
