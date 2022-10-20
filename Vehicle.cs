@@ -17,20 +17,21 @@ namespace Broken_Petrol_Ltd_2
         public int fuellingTimerInt;
         public System.Timers.Timer waitingTime;
         public int vehicleID;
+        public bool hasWaited;
         public Vehicle(int value)
         {
             Random rnd = new Random();
-            waitingTime = new(rnd.Next(1000, 2000));
+            waitingTime = new System.Timers.Timer(WaitingTime_Elapsed, null, 0, rnd.Next(1000, 2000));
             waitingTime.AutoReset = false;
             waitingTime.Enabled = true;
-            waitingTime.Elapsed += WaitingTime_Elapsed;
             vehicleID = value;
+            hasWaited = false;
 
         }
 
-        private void WaitingTime_Elapsed(object? sender, ElapsedEventArgs e)
+        void WaitingTime_Elapsed(object o)
         {
-            
+            this.hasWaited = true;
         }
     }
     internal class Car : Vehicle

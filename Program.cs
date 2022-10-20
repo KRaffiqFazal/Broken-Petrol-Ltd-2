@@ -7,37 +7,38 @@ namespace Broken_Petrol_Ltd_2
 {
     class Program
     {
-        public static int carCounter = 0;
-        public static ArrayList existingVehicles = new ArrayList();
+        int VehicleCounter = 0;
+        ArrayList existingVehicles = new ArrayList();
         
         static void Main(string[] args)
         {
 
             Random rnd = new Random();
-            System.Timers.Timer carAdder = new(rnd.Next(1500, 2200));
+            System.Timers.Timer carAdder = new System.Timers.Timer(CarAdder_Elapsed, null, 0, rnd.Next(1500, 2200));
             carAdder.AutoReset = true;
             carAdder.Enabled = true;
-            carAdder.Elapsed += (sender, e) => CarAdder_Elapsed(sender, e, rnd.Next(0, 3)); //https://stackoverflow.com/questions/9977393/how-do-i-pass-an-object-into-a-timer-event
             carAdder.Start();
             int choice = rnd.Next(0, 3);
 
         }
 
-        private static void CarAdder_Elapsed(object? sender, ElapsedEventArgs e, int carType)
+        void CarAdder_Elapsed(object o)
         {
+            Random rnd = new Random();
+            int carType = rnd.Next(0, 3);
             if (carType == 0)
             {
-                existingVehicles.Add(new Car(carCounter));
+                existingVehicles.Add(new Car(VehicleCounter));
             }
             else if (carType == 1)
             {
-                existingVehicles.Add(new Van(carCounter));
+                existingVehicles.Add(new Van(VehicleCounter));
             }
             else
             {
-                existingVehicles.Add(new HGV(carCounter));
+                existingVehicles.Add(new HGV(VehicleCounter));
             }
-            carCounter++;
+            VehicleCounter++;
         }
     }
 

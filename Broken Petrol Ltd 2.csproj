@@ -8,12 +8,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <EditorConfigFiles Remove="C:\Users\raffi\source\repos\Broken Petrol Ltd 2\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="C:\Users\raffi\source\repos\Broken Petrol Ltd 2\.editorconfig" />
-  </ItemGroup>
-
 </Project>
