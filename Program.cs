@@ -5,8 +5,8 @@ namespace Broken_Petrol_Ltd_2
 {
     class Program
     {
-        int VehicleCounter = 0;
-        ArrayList existingVehicles = new ArrayList();
+        public static int VehicleCounter = 0;
+        public static ArrayList existingVehicles = new ArrayList();
         
         static void Main(string[] args)
         {
@@ -17,7 +17,7 @@ namespace Broken_Petrol_Ltd_2
 
         }
 
-        void CarAdder(object o)
+        public static void CarAdder(object o)
         {
             Random rnd = new Random();
             int carType = rnd.Next(0, 3);

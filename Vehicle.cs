@@ -2,30 +2,31 @@
 {
     internal class Vehicle
     {
-        public String type;
-        public String fuelType;
-        public int maxFuelCapacity;
-        public int fuelInTank;
-        public System.Timers.Timer fuellingTime;
-        public int fuellingTimerInt;
-        public System.Timers.Timer waitingTime;
-        public int vehicleID;
-        public bool hasWaited;
+        public static String type;
+        public static String fuelType;
+        public static int maxFuelCapacity;
+        public static int fuelInTank;
+        public static System.Timers.Timer fuellingTime;
+        public static int fuellingTimerInt;
+        public static System.Timers.Timer waitingTime;
+        public static int vehicleID;
+        public static bool hasWaited;
+        public static bool hasFuelled;
         public Vehicle(int value)
         {
             Random rnd = new Random();
-            waitingTime = new Timer(WaitingTime_Elapsed, null, 0, rnd.Next(1000, 2000));
-            waitingTime.AutoReset = false;
-            waitingTime.Enabled = true;
+            Timer waitingTime = new Timer(WaitingTime_Elapsed, null, 0, rnd.Next(1000, 2000));
             vehicleID = value;
             hasWaited = false;
 
         }
 
-        void WaitingTime_Elapsed(object o)
+         void WaitingTime_Elapsed(object o)
         {
-            this.hasWaited = true;
+            hasWaited = true;
         }
+        
+
     }
     internal class Car : Vehicle
     {
