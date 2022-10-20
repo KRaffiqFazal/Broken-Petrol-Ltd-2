@@ -47,25 +47,38 @@
         public Car(int value) : base(value) //cars will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
         {
             Random rnd = new Random();
+            int temp;
             type = "Car";
             maxFuelCapacity = 50;
-            fuellingTimeInt = rnd.Next(1000, Math.Floor((maxFuelCapacity / 2) / 1.5));
+            fuelInTank = rnd.Next(5, maxFuelCapacity / 2);
+            temp = Convert.ToInt32(Math.Floor((maxFuelCapacity - fuelInTank) / 1.5));
+            fuellingTimeInt = rnd.Next(1000, temp);
         }
     }
     internal class Van : Vehicle
     {
         public Van(int value) : base(value)//vans will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
         {
+            Random rnd = new Random();
+            int temp;
             type = "Van";
             maxFuelCapacity = 80;
+            fuelInTank = rnd.Next(5, maxFuelCapacity / 2);
+            temp = Convert.ToInt32(Math.Floor((maxFuelCapacity - fuelInTank) / 1.5));
+            fuellingTimeInt = rnd.Next(1000, temp);
         }
     }
     internal class HGV : Vehicle
     {
         public HGV(int value) : base(value)//HGVs will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
         {
+            Random rnd = new Random();
+            int temp;
             type = "HGV";
             maxFuelCapacity = 150;
+            fuelInTank = rnd.Next(5, maxFuelCapacity / 2);
+            temp = Convert.ToInt32(Math.Floor((maxFuelCapacity - fuelInTank) / 1.5));
+            fuellingTimeInt = rnd.Next(1000, temp);
         }
     }
 }
