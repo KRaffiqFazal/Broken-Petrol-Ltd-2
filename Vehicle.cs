@@ -34,16 +34,22 @@
             fuellingTime.Dispose();
 
         }
+        void StartingFuelling()
+        {
+            fuellingTime.Change(0, fuellingTimeInt);
+            waitingTime.Dispose();
+        }
 
-        
 
     }
     internal class Car : Vehicle
     {
         public Car(int value) : base(value) //cars will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
         {
+            Random rnd = new Random();
             type = "Car";
             maxFuelCapacity = 50;
+            fuellingTimeInt = rnd.Next(1000, Math.Floor((maxFuelCapacity / 2) / 1.5));
         }
     }
     internal class Van : Vehicle
