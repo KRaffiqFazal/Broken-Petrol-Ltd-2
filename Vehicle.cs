@@ -6,25 +6,35 @@
         public static String fuelType;
         public static int maxFuelCapacity;
         public static int fuelInTank;
-        public static System.Timers.Timer fuellingTime;
-        public static int fuellingTimerInt;
-        public static System.Timers.Timer waitingTime;
+        public static Timer fuellingTime;
+        public static int fuellingTimeInt;
+        public static Timer waitingTime;
         public static int vehicleID;
         public static bool hasWaited;
         public static bool hasFuelled;
         public Vehicle(int value)
         {
             Random rnd = new Random();
-            Timer waitingTime = new Timer(WaitingTime_Elapsed, null, 0, rnd.Next(1000, 2000));
+            waitingTime = new Timer(WaitingTime_Elapsed, null, 0, rnd.Next(1000, 2000));
             vehicleID = value;
             hasWaited = false;
+            fuellingTime = new Timer(FuellingTime_Elapsed, null, Timeout.Infinite, fuellingTimeInt);
 
         }
 
-         void WaitingTime_Elapsed(object o)
+        void WaitingTime_Elapsed(object o)
         {
             hasWaited = true;
+            waitingTime.Dispose();
+            fuellingTime.Dispose();
         }
+        void FuellingTime_Elapsed(object o)
+        {
+            hasFuelled = true;
+            fuellingTime.Dispose();
+
+        }
+
         
 
     }

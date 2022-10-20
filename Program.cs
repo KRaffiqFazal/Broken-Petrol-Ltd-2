@@ -13,8 +13,6 @@ namespace Broken_Petrol_Ltd_2
 
             Random rnd = new Random();
             Timer carAdder = new Timer(CarAdder, null, 0, rnd.Next(1500, 2200));
-            int choice = rnd.Next(0, 3);
-
         }
 
         public static void CarAdder(object o)
