@@ -1,5 +1,5 @@
 ﻿//used for waiting and fuelling
-using System.Collections; //used for Arraylists
+using System.Collections.Generic; //used for Lists
 
 namespace Broken_Petrol_Ltd_2
 {
@@ -23,28 +23,19 @@ namespace Broken_Petrol_Ltd_2
             await Task.Run(() => 
             {
                 while (true)
-                { 
+                {
                     //assign vehicles to an available pump
+                    foreach (Object o in existingVehicles)
+                    { 
+                        o
+                    }
                 }
             });
         }
 
         public static void CarAdder(object o)
-        {
-            Random rnd = new Random();
-            int carType = rnd.Next(0, 3);
-            if (carType == 0)
-            {
-                existingVehicles.Add(new Car(VehicleCounter));
-            }
-            else if (carType == 1)
-            {
-                existingVehicles.Add(new Van(VehicleCounter));
-            }
-            else
-            {
-                existingVehicles.Add(new HGV(VehicleCounter));
-            }
+        { 
+            existingVehicles.Add(new Vehicle(VehicleCounter));
             VehicleCounter++;
         }
     }

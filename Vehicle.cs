@@ -1,4 +1,6 @@
-﻿namespace Broken_Petrol_Ltd_2
+﻿using System.Reflection;
+
+namespace Broken_Petrol_Ltd_2
 {
     internal class Vehicle
     {
@@ -15,10 +17,18 @@
         public Vehicle(int value)
         {
             Random rnd = new Random();
+            String[] model = { "Car", "Van", "HGV" };
+            int[] maxFuel = { 50, 80, 150 };
             waitingTime = new Timer(WaitingTime_Elapsed, null, 0, rnd.Next(1000, 2000));
             vehicleID = value;
             hasWaited = false;
             fuellingTime = new Timer(FuellingTime_Elapsed, null, Timeout.Infinite, fuellingTimeInt);
+            int temp = rnd.Next(0, 3); //used to select the vehicle type and hence its max fuel capacity.
+            type = model[temp];
+            maxFuelCapacity = maxFuel[temp];
+            fuelInTank = rnd.Next(5, maxFuelCapacity / 2);
+            temp = Convert.ToInt32(Math.Floor((maxFuelCapacity - fuelInTank) / 1.5));
+            fuellingTimeInt = rnd.Next(1000, temp);
 
         }
 
@@ -39,38 +49,7 @@
             fuellingTime.Change(0, fuellingTimeInt);
             waitingTime.Dispose();
         }
-        public void SpecificVehicle(String model, int maxFuel)
-        {
-            Random rnd = new Random();
-            int temp;
-            type = model;
-            maxFuelCapacity = maxFuel;
-            fuelInTank = rnd.Next(5, maxFuelCapacity / 2);
-            temp = Convert.ToInt32(Math.Floor((maxFuelCapacity - fuelInTank) / 1.5));
-            fuellingTimeInt = rnd.Next(1000, temp);
-        }
 
 
-    }
-    internal class Car : Vehicle
-    {
-        public Car(int value) : base(value) //cars will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
-        {
-            SpecificVehicle("Car", 50);
-        }
-    }
-    internal class Van : Vehicle
-    {
-        public Van(int value) : base(value)//vans will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
-        {
-            SpecificVehicle("Van", 80);
-        }
-    }
-    internal class HGV : Vehicle
-    {
-        public HGV(int value) : base(value)//HGVs will have a fixed name to signify their type and a max fuel capacity, therfore I can use inheritance to show this
-        {
-            SpecificVehicle("HGV", 150);
-        }
     }
 }
