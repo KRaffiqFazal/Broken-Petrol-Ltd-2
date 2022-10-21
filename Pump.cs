@@ -1,6 +1,6 @@
 ﻿namespace Broken_Petrol_Ltd_2
 {
-        internal class Pump //each pump will be an object of this class
+        class Pump //each pump will be an object of this class
         {
 
             public int pumpNumber;

@@ -2,19 +2,19 @@
 
 namespace Broken_Petrol_Ltd_2
 {
-    internal class Vehicle
+    class Vehicle
     {
-        public static String type;
-        public static String fuelType;
-        public static int maxFuelCapacity;
-        public static int fuelInTank;
-        public static Timer fuellingTime;
-        public static int fuellingTimeInt;
-        public static Timer waitingTime;
-        public static int vehicleID;
-        public static bool hasWaited;
-        public static bool isFuelling;
-        public static bool isFuelled;
+        public String type;
+        public String fuelType;
+        public int maxFuelCapacity;
+        public int fuelInTank;
+        public Timer fuellingTime;
+        public int fuellingTimeInt;
+        public Timer waitingTime;
+        public int vehicleID;
+        public bool hasWaited;
+        public bool isFuelling;
+        public bool isFuelled;
         public Vehicle(int value)
         {
             Random rnd = new Random();
@@ -31,7 +31,7 @@ namespace Broken_Petrol_Ltd_2
             maxFuelCapacity = maxFuel[temp];
             fuelInTank = rnd.Next(5, maxFuelCapacity / 2);
             temp = Convert.ToInt32(Math.Floor((maxFuelCapacity - fuelInTank) / 1.5));
-            fuellingTimeInt = rnd.Next(1000, temp);
+            fuellingTimeInt = rnd.Next(1000, temp * 1000);
 
         }
 
@@ -47,7 +47,7 @@ namespace Broken_Petrol_Ltd_2
             isFuelled = true;
 
         }
-        public static void StartingFuelling()
+        public void StartingFuelling()
         {
             fuellingTime.Change(0, fuellingTimeInt);
             isFuelling = true;

@@ -18,9 +18,15 @@ namespace Broken_Petrol_Ltd_2
             Random rnd = new Random();
             Timer carAdder = new Timer(CarAdder, null, 0, rnd.Next(1500, 2200));
             Timer ender = new Timer(Stopper, null, 0, 30000);
-            Assigner();
-            WaitKick();
-            FuelledKick();
+            int i = 0;
+            while (cont)
+            {
+                Assigner();
+                WaitKick();
+                FuelledKick();
+                Console.WriteLine(i);
+                i++;
+            }
 
         }
 
@@ -28,12 +34,10 @@ namespace Broken_Petrol_Ltd_2
         {
             await Task.Run(() =>
             {
-                while (cont)
-                {
                     //assign vehicles to an available pump
                     foreach (Vehicle item in existingVehicles)
                     {
-                        if (!Vehicle.isFuelling && !Vehicle.hasWaited)
+                        if (!item.isFuelling && !item.hasWaited)
                         {
                             foreach (Pump[] lane in allLanes)
                             {
@@ -44,53 +48,51 @@ namespace Broken_Petrol_Ltd_2
                                 else if (lane[1].inUse && !lane[0].inUse) //if the second pump in the lane is being used but the first pump is not, go to first pump
                                 {
                                     lane[0].inUse = true;
-                                    Vehicle.StartingFuelling();
+                                    item.StartingFuelling();
                                     fuelling[lane[0].pumpNumber] = item;
+                                    Displayer();
                                 }
                                 else if (!lane[2].inUse && !lane[1].inUse && !lane[0].inUse) //if all pumps are free, furthest will be selected to fuel at.
                                 {
                                     lane[2].inUse = true;
-                                    Vehicle.StartingFuelling();
+                                    item.StartingFuelling();
                                     fuelling[lane[2].pumpNumber] = item;
+                                    Displayer();
                                 }
                             }
                         }
                     }
-                }
             });
         }
         public static async Task WaitKick() //an asynchronous method that will run throughout the entire program to ensure that vehicles are kicked from the list if they finish waiting
         {
             await Task.Run(() =>
             {
-                while (cont)
-                {
                     //checks list of vehicles to see which want to leave
                     foreach (Vehicle item in existingVehicles)
                     {
-                        if (Vehicle.hasWaited == true)
+                        if (item.hasWaited == true)
                         {
                             existingVehicles.Remove(item);
+                            Displayer();
                         }
                     }
-                }
             });
         }
         public static async Task FuelledKick() //an asynchronous method that will run throughout the entire program to ensure that vehicles are kicked from the list once they start fuelling.
         {
             await Task.Run(() =>
-            {
-                while (cont)
-                {
+            {                
                     //checks list of vehicles to see which have started fuelling and so can be kicked
                     foreach (Vehicle item in existingVehicles)
                     {
-                        if (Vehicle.isFuelling == true)
+                        if (item.isFuelling == true)
                         {
                             existingVehicles.Remove(item);
+                            Displayer();
                         }
                     }
-                }
+                
             });
         }
         public static void Stopper(object o) //will stop the program from running when required by making cont false.
@@ -103,6 +105,20 @@ namespace Broken_Petrol_Ltd_2
             {
                 existingVehicles.Add(new Vehicle(VehicleCounter));
                 VehicleCounter++;
+            }
+        }
+        public static void Displayer()
+        {
+            Console.Clear();
+            Console.WriteLine($"Pump {lane1[2]}: {lane1[2].inUse} |Pump {lane2[2]}: {lane2[2].inUse} |Pump {lane3[2]}: {lane3[2].inUse}");
+            Console.WriteLine($"Pump {lane1[1]}: {lane1[1].inUse} |Pump {lane2[1]}: {lane2[1].inUse} |Pump {lane3[1]}: {lane3[1].inUse}");
+            Console.WriteLine($"Pump {lane1[0]}: {lane1[0].inUse} |Pump {lane2[0]}: {lane2[0].inUse} |Pump {lane3[0]}: {lane3[0].inUse}");
+            foreach (Vehicle item in existingVehicles)
+            {
+                if (!item.hasWaited && !item.isFuelling)
+                {
+                    Console.WriteLine(item.type);
+                }
             }
         }
     }
