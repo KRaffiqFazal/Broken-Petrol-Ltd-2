@@ -6,7 +6,7 @@ namespace Broken_Petrol_Ltd_2
     class Program
     {
         public static int VehicleCounter = 0;
-        public static ArrayList existingVehicles = new ArrayList();
+        public static List<Vehicle> existingVehicles = new List<Vehicle>();
         public static Pump[] lane1 = { new Pump(1), new Pump(2), new Pump(3) };
         public static Pump[] lane2 = { new Pump(4), new Pump(5), new Pump(6) };
         public static Pump[] lane3 = { new Pump(7), new Pump(8), new Pump(9) };
