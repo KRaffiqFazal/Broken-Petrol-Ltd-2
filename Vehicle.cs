@@ -14,11 +14,14 @@ namespace Broken_Petrol_Ltd_2
         public static int vehicleID;
         public static bool hasWaited;
         public static bool isFuelling;
+        public static bool isFuelled;
         public Vehicle(int value)
         {
             Random rnd = new Random();
+
             String[] model = { "Car", "Van", "HGV" };
             int[] maxFuel = { 50, 80, 150 };
+
             waitingTime = new Timer(WaitingTime_Elapsed, null, 0, rnd.Next(1000, 2000));
             vehicleID = value; //a unique id that can be used to find a specific vehicle.
             hasWaited = false;
@@ -41,9 +44,10 @@ namespace Broken_Petrol_Ltd_2
         void FuellingTime_Elapsed(object o)
         {    
             fuellingTime.Dispose();
+            isFuelled = true;
 
         }
-        void StartingFuelling()
+        public static void StartingFuelling()
         {
             fuellingTime.Change(0, fuellingTimeInt);
             isFuelling = true;
