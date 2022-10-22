@@ -25,13 +25,18 @@ namespace Broken_Petrol_Ltd_2
             waitingTime = new Timer(WaitingTime_Elapsed, null, 0, rnd.Next(1000, 2000));
             vehicleID = value; //a unique id that can be used to find a specific vehicle.
             hasWaited = false;
-            fuellingTime = new Timer(FuellingTime_Elapsed, null, Timeout.Infinite, fuellingTimeInt); //once specified will trigger to signal the time it takes for a vehicle to fuel
+            isFuelling = false;
+
             int temp = rnd.Next(0, 3); //used to select the vehicle type and hence its max fuel capacity.
+
             type = model[temp];
             maxFuelCapacity = maxFuel[temp];
             fuelInTank = rnd.Next(5, maxFuelCapacity / 2);
+
             temp = Convert.ToInt32(Math.Floor((maxFuelCapacity - fuelInTank) / 1.5));
             fuellingTimeInt = rnd.Next(1000, temp * 1000);
+            fuellingTime = new Timer(FuellingTime_Elapsed, null, Timeout.Infinite, fuellingTimeInt); //once specified will trigger to signal the time it takes for a vehicle to fuel
+
 
         }
 
@@ -42,9 +47,9 @@ namespace Broken_Petrol_Ltd_2
             fuellingTime.Dispose();
         }
         void FuellingTime_Elapsed(object o)
-        {    
-            fuellingTime.Dispose();
+        {
             isFuelled = true;
+            fuellingTime.Dispose();
 
         }
         public void StartingFuelling()
