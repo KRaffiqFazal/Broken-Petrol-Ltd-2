@@ -6,8 +6,8 @@ namespace Broken_Petrol_Ltd_2
     {
         public static int VehicleCounter = 0;
         public static bool cont = false; //will signal functions to stop when it becomes false, will become true if login successful
-        public static String username = "Admin";
-        public static String password = "Admin123";
+        public static String[] username = { "Admin", "Admin1", "Admin2" };
+        public static String[] password = { "Admin12", "Admin123", "Admin1234" };
         public static String currentUsername = "............";
         public static String currentPasswordInStars = "************";
         public static String currentPassword;
@@ -63,13 +63,10 @@ namespace Broken_Petrol_Ltd_2
             else if (step == 2)
             {
                 Console.WriteLine("Checking details...");
-                if (currentUsername.Equals(username) && currentPassword.Equals(password) && tries < 2)
-                {
-                    Console.WriteLine("The details you entered were correct");
-                    cont = true;
-                    return;
-                }
-                else if (!currentUsername.Equals(username) || !currentPassword.Equals(password))
+                int temp1 = Array.IndexOf(username, currentUsername); //checks to see if entered details matches that within the array
+                int temp2 = Array.IndexOf(password, currentPassword);
+
+                if (temp1 == -1 || temp2 == -1 || temp1 != temp2)
                 {
                     tries--;
                     if (tries <= 0)
@@ -77,19 +74,21 @@ namespace Broken_Petrol_Ltd_2
                         Console.WriteLine("INTRUSION DETECTED. TERMINAL DISABLED.");
                         Environment.Exit(0);
                     }
-                    else if (tries > 1)
-                    {
-                        Console.WriteLine($"The entered details do not match, try again ({tries} attempts left).");
-                    }
                     else
                     {
-                        Console.WriteLine($"The entered details do not match, try again ({tries} attempt left).");
+                        Console.WriteLine($"The entered details do not match, try again ({tries} attempts left).");
                     }
                     currentUsername = "............";
                     currentPasswordInStars = "************";
                     System.Threading.Thread.Sleep(2000);
                     Console.Clear();
                     Login(0, tries);
+                }
+                else if (temp1 == temp2)
+                {
+                    Console.WriteLine("The details you entered were correct");
+                    cont = true;
+                    return;
                 }
             }
         }
