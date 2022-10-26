@@ -27,6 +27,7 @@ namespace Broken_Petrol_Ltd_2
             vehicleID = value; //a unique id that can be used to find a specific vehicle.
             hasWaited = false;
             isFuelling = false;
+            isFuelled = false;
 
             int temp = rnd.Next(0, 3); //used to select the vehicle type and hence its max fuel capacity.
 

@@ -1,12 +1,15 @@
-﻿using System.Threading;//used for waiting and fuelling
-
+﻿using System;
+using System.Threading;
+using System.IO; //used for reading files
 namespace Broken_Petrol_Ltd_2
 {
     class Program
     {
         public static int VehicleCounter = 0;
         public static bool cont = false; //will signal functions to stop when it becomes false, will become true if login successful
-        
+        public static int carsFuelled = 0;
+        public static int carsLeft = 0;
+
         public static String[] username = { "Admin", "Admin1", "Admin2" }; //usernames that can be used to login
         public static String[] password = { "Admin12", "Admin123", "Admin1234" }; //respective passwords that must be used appropriately with the correct username to login
         public static String currentUsername = "............"; //a placeholder username for when the user has not entered a username yet to login
@@ -38,7 +41,9 @@ namespace Broken_Petrol_Ltd_2
                 Assigner();
                 WaitKick();
                 FuelledKick();
+                NotFuellingAnymore();
             }
+            EndOfTheDay();
 
         }
 
@@ -89,7 +94,7 @@ namespace Broken_Petrol_Ltd_2
                     }
                     currentUsername = "............";
                     currentPasswordInStars = "************";
-                    System.Threading.Thread.Sleep(2000);
+                    Thread.Sleep(2000);
                     Console.Clear();
                     Login(0, tries);
                 }
@@ -102,7 +107,59 @@ namespace Broken_Petrol_Ltd_2
                 }
             }
         }
+        public static void EndOfTheDay()
+        {
+            Console.Clear();
+            double unleaded = 0;
+            double diesel = 0;
+            double lpg = 0;
+            foreach (Pump[] lane in allLanes)
+            {
+                foreach (Pump pump in lane)
+                {
+                    unleaded += pump.unleadedDispensed;
+                    diesel += pump.dieselDispensed;
+                    lpg += pump.lpgDispensed;
+                }
+            }
+            try
+            {
+                Console.WriteLine($"The Day has ended {selectedUsername}, please note the following:");
+                Console.WriteLine($"The number of cars that were fuelled today is: {carsFuelled}");
+                Console.WriteLine($"The number of cars that left before fuelling today is: {carsLeft}");
+                Console.WriteLine($"The amount of Unleaded fuel that was dispensed today is: {unleaded}litres");
+                Console.WriteLine($"The amount of Diesel fuel that was dispensed today is: {diesel}litres");
+                Console.WriteLine($"The amount of LPG fuel that was dispensed today is: {lpg}litres");
+                Console.WriteLine("Please choose one of the below options by typing its respective number:");
+                Console.WriteLine("[1] View previous day/s results");
+                Console.WriteLine("[2] Delete previous day/s results");
+                Console.WriteLine("[3] Calculate tomorrow's fuel average");
+                Console.WriteLine("[4] Logout");
+                Console.WriteLine("Please now select your desired option");
+                int option = Convert.ToInt32(Console.ReadLine());
+                switch (option)
+                {
+                    case 1: PreviousDay(0);
 
+                    case 2: PreviousDay(1);
+
+                    case 3: PreviousDay(2);
+
+                    case 4: Console.WriteLine("Logging out..."); Thread.Sleep(500); Environment.Exit(0);
+                }
+
+            }
+            catch
+            {
+                Console.WriteLine("Please enter a valid input");
+                Thread.Sleep(500);
+                EndOfTheDay();
+            }
+        }
+        public static void PreviousDay(int option)
+        { 
+            if
+        }
         public static void Assigner() //an asynchronous method that will run throughout the entire program to ensure that vehicles are assigned as they come in
         {
             //assign vehicles to an available pump
@@ -124,8 +181,9 @@ namespace Broken_Petrol_Ltd_2
                             {
                                 lane[0].inUse = true;
                                 fuelling[lane[0].pumpNumber - 1] = existingVehicles[i];
-                                fuelling[lane[0].pumpNumber - 1].StartingFuelling();
                                 existingVehicles[i] = null;
+                                fuelling[lane[0].pumpNumber - 1].StartingFuelling();
+                                AddFuel(0, lane);
                                 Displayer();
                                 Console.WriteLine("Middle pump in use so going to closest");
                             }
@@ -135,12 +193,28 @@ namespace Broken_Petrol_Ltd_2
                                 fuelling[lane[2].pumpNumber - 1] = existingVehicles[i];
                                 fuelling[lane[2].pumpNumber - 1].StartingFuelling();
                                 existingVehicles[i] = null;
+                                AddFuel(2, lane);
                                 Displayer();
                                 Console.WriteLine("No pumps in use going to farthest");
                             }
                         }
                     }
                 }
+            }
+        }
+        public static void AddFuel(int laneNum, Pump[] lane)
+        {
+            if (fuelling[lane[laneNum].pumpNumber - 1].fuelType.Equals("Unleaded"))
+            {
+                lane[laneNum].unleadedDispensed += (fuelling[lane[laneNum].pumpNumber - 1].fuellingTimeInt / 1000) * 1.5; //based on how long the vehicle was meant to fuel for, divided by 1000 to get the time in seconds and multiplied by 1.5 to work out how much fuel was dispensed
+            }
+            else if (fuelling[lane[laneNum].pumpNumber - 1].fuelType.Equals("Diesel"))
+            {
+                lane[laneNum].dieselDispensed += (fuelling[lane[laneNum].pumpNumber - 1].fuellingTimeInt / 1000) * 1.5;
+            }
+            else
+            {
+                lane[laneNum].lpgDispensed += (fuelling[lane[laneNum].pumpNumber - 1].fuellingTimeInt / 1000) * 1.5;
             }
         }
         public static void WaitKick() //an asynchronous method that will run throughout the entire program to ensure that vehicles are kicked from the list if they finish waiting
@@ -154,12 +228,13 @@ namespace Broken_Petrol_Ltd_2
                     if (existingVehicles[i].hasWaited)
                     {
                         existingVehicles[i] = null;
+                        carsLeft++;
                         Displayer();
                     }
                 }
             }
         }
-        public static void FuelledKick() //an asynchronous method that will run throughout the entire program to ensure that vehicles are kicked from the list once they start fuelling.
+        public static void FuelledKick() //kicks vehicles from waiting list once they start fuelling as they will be at pump
         {
             //checks list of vehicles to see which have started fuelling and so can be kicked
             for (int i = 0; i < existingVehicles.Length; i++)
@@ -170,6 +245,34 @@ namespace Broken_Petrol_Ltd_2
                     {
                         existingVehicles[i] = null;
                         Displayer();
+                    }
+                }
+            }
+        }
+        public static void NotFuellingAnymore() //checks to see if a vehicle's isFuelled boolean is true,
+        {
+            int temp;
+            foreach (Vehicle item in fuelling)
+            {
+                if (item != null)
+                {
+                    if (item.isFuelled)
+                    {
+                        temp = Array.IndexOf(fuelling, item);
+                        fuelling[temp] = null;
+                        if (temp <= 3) //lane 1
+                        {
+                            lane1[temp - 1].inUse = false;
+                        }
+                        else if (temp <= 6) //lane 2
+                        {
+                            lane2[temp - 1].inUse = false;
+                        }
+                        else //lane 3
+                        {
+                            lane3[temp - 1].inUse = false;
+                        }
+                        carsFuelled++;
                     }
                 }
             }
@@ -203,6 +306,21 @@ namespace Broken_Petrol_Ltd_2
                     Console.WriteLine(existingVehicles[i].type);
                 }
             }
+            double unleaded = 0;
+            double diesel = 0;
+            double lpg = 0;
+            foreach (Pump[] lane in allLanes)
+            {
+                foreach (Pump pump in lane)
+                {
+                    unleaded += pump.unleadedDispensed;
+                    diesel += pump.dieselDispensed;
+                    lpg += pump.lpgDispensed;
+                }
+            }
+            Console.WriteLine($"Unleaded dispensed: {unleaded}litres");
+            Console.WriteLine($"Diesel dispensed: {diesel}litres");
+            Console.WriteLine($"LPG dispensed: {lpg}litres");
         }
     }
 
