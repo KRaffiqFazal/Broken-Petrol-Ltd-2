@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Threading;
 using System.IO; //used for reading files
+using System.Text;
+
 namespace Broken_Petrol_Ltd_2
 {
     class Program
     {
+        public static String path = @"C:\Users\raffi\source\repos\Broken Petrol Ltd 2"; //please replace this with the path of the program on the petrol station console
+
+
         public static int VehicleCounter = 0;
         public static bool cont = false; //will signal functions to stop when it becomes false, will become true if login successful
         public static int carsFuelled = 0;
@@ -35,7 +40,7 @@ namespace Broken_Petrol_Ltd_2
             {
                 if (cont && !temp) //run one time once correct username/password used
                 {
-                    Timer ender = new Timer(Stopper, null, 30000, 30000);
+                    Timer ender = new Timer(Stopper, null, 90000, 90000);
                     temp = true;
                 }
                 Assigner();
@@ -139,13 +144,13 @@ namespace Broken_Petrol_Ltd_2
                 int option = Convert.ToInt32(Console.ReadLine());
                 switch (option)
                 {
-                    case 1: PreviousDay(0);
+                    case 1: PreviousDay(0, unleaded, diesel, lpg); break;
 
-                    case 2: PreviousDay(1);
+                    case 2: PreviousDay(1, unleaded, diesel, lpg); break;
 
-                    case 3: PreviousDay(2);
+                    case 3: PreviousDay(2, unleaded, diesel, lpg); break;
 
-                    case 4: Console.WriteLine("Logging out..."); Thread.Sleep(500); Environment.Exit(0);
+                    case 4: Console.WriteLine("Logging out..."); Thread.Sleep(500); Environment.Exit(0); break;
                 }
 
             }
@@ -156,47 +161,136 @@ namespace Broken_Petrol_Ltd_2
                 EndOfTheDay();
             }
         }
-        public static void PreviousDay(int option)
-        { 
-            if
+        public static void PreviousDay(int option, double unleaded, double diesel, double lpg)
+        {
+            DateTime temp = DateTime.Today;
+            Byte[] today = new UTF8Encoding(true).GetBytes(temp + "," + unleaded + "," + diesel + "," + lpg + Environment.NewLine);
+            if (!File.Exists("BrokenPetrolLtd.txt"))
+            {
+                using (FileStream records = File.Create(path + @"\BrokenPetrolLtd.txt"))
+                {
+                    records.Write(today, 0, today.Length);
+                }
+
+            }
+            else
+            {
+                File.AppendAllText(path + @"\BrokenPetrolLtd.txt", temp + "," + unleaded + "," + diesel + "," + lpg + Environment.NewLine);
+            }
+            String[] lines = null;
+            String[] temp2; //will hold array with split values
+            int i = 0;
+
+            lines = File.ReadAllLines(path + @"\BrokenPetrolLtd.txt");
+            foreach (String line in lines)
+            {
+                temp2 = line.Split(",");
+                Console.WriteLine($"[{i + 1}] Date: {temp2[0]} | Unleaded: {temp2[1]} | Diesel: {temp2[2]} | LPG: {temp2[3]}");
+                i++;
+            }
+
+            switch (option)
+            {
+                case 0:
+                    Console.WriteLine("Please enter any key to return.");
+                    Console.ReadKey();
+                    break;
+                case 1:
+                    Console.WriteLine("Please type in the index that you wish to delete, please note that today's results cannot be deleted"); //prevents complete loss of statistics if console is breached
+                    try
+                    {
+                        int toDelete = Convert.ToInt32(Console.ReadLine()) - 1;
+                        if (lines[toDelete] != lines.Last())
+                        {
+                            lines[toDelete] = null;
+                        }
+                        foreach (String line in lines)
+                        {
+                            if (line == null)
+                            {
+                                continue;
+                            }
+                            File.AppendAllText(path + @"\BrokenPetrolLtd.txt", line + Environment.NewLine);
+
+                        }
+
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Something has gone wrong.");
+                        Thread.Sleep(500);
+                        EndOfTheDay();
+                    }
+                    break;
+                case 2: //do standard deviation later
+                    double unleadedMean = 0;
+                    double[] unleadedSd = { };//works out the standard deviation of the unleaded fuel
+                    double dieselMean = 0;
+                    double[] dieselSd = { };
+                    double lpgMean = 0;
+                    double[] lpgSd = { };
+                    int numTotal = 0;
+
+                    foreach (String line in lines)
+                    {
+                        temp2 = line.Split(",");
+                        unleadedMean += Convert.ToDouble(temp2[1]);
+                        dieselMean += Convert.ToDouble(temp2[2]);
+                        lpgMean += Convert.ToDouble(temp2[3]);
+                        numTotal++;
+
+                    }
+                    unleadedMean /= numTotal;
+                    dieselMean /= numTotal;
+                    lpgMean /= numTotal;
+                    break;
+            }
         }
         public static void Assigner() //an asynchronous method that will run throughout the entire program to ensure that vehicles are assigned as they come in
         {
             //assign vehicles to an available pump
-            for (int i=0; i< existingVehicles.Length; i++)
+            for (int i=0; i < existingVehicles.Length; i++)
             {
-                if (existingVehicles[i] != null)
+                if (existingVehicles[i] == null)
                 {
-                    if (!existingVehicles[i].isFuelling && !existingVehicles[i].hasWaited)
-                    {
+                    continue;
+                }
+                if (!existingVehicles[i].isFuelling && !existingVehicles[i].hasWaited)
+                {
 
-                        foreach (Pump[] lane in allLanes)
+                    foreach (Pump[] lane in allLanes)
+                    {
+                        if (lane[0].inUse) //if the first pump in the lane is not free, automatically check the next lane
                         {
-                            if (lane[0].inUse) //if the first pump in the lane is not free, automatically check the next lane
-                            {
-                                Console.WriteLine("Closest pump is in use");
-                                continue;
-                            }
-                            else if (lane[1].inUse && !lane[0].inUse) //if the second pump in the lane is being used but the first pump is not, go to first pump
-                            {
-                                lane[0].inUse = true;
-                                fuelling[lane[0].pumpNumber - 1] = existingVehicles[i];
-                                existingVehicles[i] = null;
-                                fuelling[lane[0].pumpNumber - 1].StartingFuelling();
-                                AddFuel(0, lane);
-                                Displayer();
-                                Console.WriteLine("Middle pump in use so going to closest");
-                            }
-                            else if (!lane[2].inUse && !lane[1].inUse && !lane[0].inUse) //if all pumps are free, furthest will be selected to fuel at.
-                            {
-                                lane[2].inUse = true;
-                                fuelling[lane[2].pumpNumber - 1] = existingVehicles[i];
-                                fuelling[lane[2].pumpNumber - 1].StartingFuelling();
-                                existingVehicles[i] = null;
-                                AddFuel(2, lane);
-                                Displayer();
-                                Console.WriteLine("No pumps in use going to farthest");
-                            }
+                            Console.WriteLine("Closest pump is in use");
+                            continue;
+                        }
+                        else if (lane[1].inUse && !lane[0].inUse && existingVehicles[i] != null) //if the second pump in the lane is being used but the first pump is not, go to first pump
+                        {
+                            lane[0].inUse = true;
+                            fuelling[lane[0].pumpNumber - 1] = existingVehicles[i];
+                            existingVehicles[i] = null;
+                            fuelling[lane[0].pumpNumber - 1].StartingFuelling();
+                            AddFuel(0, lane);
+                            Displayer();
+                        }
+                        else if (lane[2].inUse && !lane[1].inUse && existingVehicles[i] == null) //this needs to be fixed
+                        {
+                            lane[1].inUse = true;
+                            fuelling[lane[1].pumpNumber - 1] = existingVehicles[i];
+                            existingVehicles[i] = null;
+                            fuelling[lane[1].pumpNumber - 1].StartingFuelling();
+                            AddFuel(0, lane);
+                            Displayer();
+                        }
+                        else if (!lane[2].inUse && !lane[1].inUse && !lane[0].inUse && existingVehicles[i] != null) //if all pumps are free, furthest will be selected to fuel at.
+                        {
+                            lane[2].inUse = true;
+                            fuelling[lane[2].pumpNumber - 1] = existingVehicles[i];
+                            fuelling[lane[2].pumpNumber - 1].StartingFuelling();
+                            existingVehicles[i] = null;
+                            AddFuel(2, lane);
+                            Displayer();
                         }
                     }
                 }
@@ -258,19 +352,19 @@ namespace Broken_Petrol_Ltd_2
                 {
                     if (item.isFuelled)
                     {
-                        temp = Array.IndexOf(fuelling, item);
+                        temp = Array.IndexOf(fuelling, item); //pump1 is index 0, 2 is 1, etc
                         fuelling[temp] = null;
-                        if (temp <= 3) //lane 1
+                        if (temp <= 2) //lane 1
                         {
-                            lane1[temp - 1].inUse = false;
+                            lane1[temp].inUse = false;
                         }
-                        else if (temp <= 6) //lane 2
+                        else if (temp <= 5) //lane 2
                         {
-                            lane2[temp - 1].inUse = false;
+                            lane2[temp % 3].inUse = false;
                         }
                         else //lane 3
                         {
-                            lane3[temp - 1].inUse = false;
+                            lane3[temp % 3].inUse = false;
                         }
                         carsFuelled++;
                     }
@@ -289,6 +383,7 @@ namespace Broken_Petrol_Ltd_2
                 if (existingVehicles[i] == null)
                 {
                     existingVehicles[i] = new Vehicle(VehicleCounter);
+                    break;
                 }
             }
         }

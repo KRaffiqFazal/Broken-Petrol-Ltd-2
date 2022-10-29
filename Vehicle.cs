@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
-
+using System;
+using System.Timers;
 namespace Broken_Petrol_Ltd_2
 {
     class Vehicle
@@ -8,9 +9,9 @@ namespace Broken_Petrol_Ltd_2
         public String fuelType;
         public int maxFuelCapacity;
         public int fuelInTank;
-        public Timer fuellingTime;
+        public System.Timers.Timer fuellingTime;
         public int fuellingTimeInt;
-        public Timer waitingTime;
+        public System.Timers.Timer waitingTime;
         public int vehicleID;
         public bool hasWaited;
         public bool isFuelling;
@@ -23,7 +24,9 @@ namespace Broken_Petrol_Ltd_2
             int[] maxFuel = { 50, 80, 150 };
             String[] fuelTypes = { "Unleaded", "Diesel", "LPG"};
 
-            waitingTime = new Timer(WaitingTime_Elapsed, null, 0, rnd.Next(1000, 2000));
+            waitingTime = new System.Timers.Timer(rnd.Next(1000, 2000));
+            waitingTime.Enabled = true;
+            waitingTime.Elapsed += WaitingTime_Elapsed;
             vehicleID = value; //a unique id that can be used to find a specific vehicle.
             hasWaited = false;
             isFuelling = false;
@@ -37,8 +40,10 @@ namespace Broken_Petrol_Ltd_2
 
             temp = Convert.ToInt32(Math.Floor((maxFuelCapacity - fuelInTank) / 1.5)); //works out the time in seconds it would take to fuel the car to max to use as a top boundary for how long it can fuel for
             fuellingTimeInt = rnd.Next(1000, temp * 1000);
-            fuellingTime = new Timer(FuellingTime_Elapsed, null, Timeout.Infinite, fuellingTimeInt); //once specified will trigger to signal the time it takes for a vehicle to fuel
-
+            fuellingTime = new System.Timers.Timer(fuellingTimeInt); //once specified will trigger to signal the time it takes for a vehicle to fuel
+            fuellingTime.AutoReset = false;
+            fuellingTime.Elapsed += FuellingTime_Elapsed;
+            fuellingTime.Enabled = false;
             if (type.Equals("Car"))
             {
                 fuelType = fuelTypes[rnd.Next(0, 3)]; //Car can use any fuel
@@ -54,25 +59,26 @@ namespace Broken_Petrol_Ltd_2
 
         }
 
-        void WaitingTime_Elapsed(object o)
+        private void WaitingTime_Elapsed(object? sender, ElapsedEventArgs e)
         {
-            hasWaited = true;
-            waitingTime.Dispose();
-            fuellingTime.Dispose();
+            this.hasWaited = true;
+            this.waitingTime.Dispose();
+            if (fuellingTime != null)
+            {
+                this.fuellingTime.Dispose();
+            }
         }
-        void FuellingTime_Elapsed(object o)
-        {
-            isFuelled = true;
-            fuellingTime.Dispose();
 
+        private void FuellingTime_Elapsed(object? sender, ElapsedEventArgs e)
+        {
+            this.isFuelled = true;
+            this.fuellingTime.Dispose();
         }
         public void StartingFuelling()
         {
-            fuellingTime.Change(0, fuellingTimeInt);
-            isFuelling = true;
-            waitingTime.Dispose();
+            this.fuellingTime.Enabled = true;
+            this.isFuelling = true;
+            this.waitingTime.Dispose();
         }
-
-
     }
 }
