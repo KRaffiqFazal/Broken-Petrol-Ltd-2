@@ -76,6 +76,8 @@ namespace Broken_Petrol_Ltd_2
         }
         public void StartingFuelling()
         {
+            this.waitingTime.Stop();
+            this.waitingTime.Dispose();
             this.fuellingTime.Enabled = true;
             this.isFuelling = true;
             this.waitingTime.Dispose();
