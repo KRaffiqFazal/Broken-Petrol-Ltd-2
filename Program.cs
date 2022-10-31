@@ -217,7 +217,7 @@ namespace Broken_Petrol_Ltd_2
             }
             else
             {
-                File.AppendAllText(path + @"\BrokenPetrolLtd.txt", temp + "," + unleaded + "," + diesel + "," + lpg + Environment.NewLine);
+                File.AppendAllText(path + @"\BrokenPetrolLtd.txt",username[selectedUsername] + "," + carsFuelled + "," + carsLeft + "," + temp + "," + unleaded + "," + diesel + "," + lpg + Environment.NewLine);
             }
         }
         public static void PreviousDay(int option, double unleaded, double diesel, double lpg)
@@ -230,7 +230,7 @@ namespace Broken_Petrol_Ltd_2
             foreach (String line in lines)
             {
                 temp2 = line.Split(",");
-                Console.WriteLine($"[{i + 1}] Date: {temp2[0]} | Unleaded: {temp2[1]} | Diesel: {temp2[2]} | LPG: {temp2[3]}");
+                Console.WriteLine($"[{i + 1}] Employee: {temp2[0]} | Vehicles Fuelled: {temp2[1]} | Vehicles Left: {temp2[2]} | Date: {temp2[3]} | Unleaded: {temp2[4]} | Diesel: {temp2[5]} | LPG: {temp2[6]}");
                 i++;
             }
             switch (option)
@@ -289,12 +289,12 @@ namespace Broken_Petrol_Ltd_2
                     foreach (String line in lines)
                     {
                         temp2 = line.Split(",");
-                        unleadedMean += Convert.ToDouble(temp2[1]);
-                        unleadedSdArray[Array.IndexOf(lines, line)] = Math.Pow(Convert.ToDouble(temp2[1]), 2);
-                        dieselMean += Convert.ToDouble(temp2[2]);
-                        dieselSdArray[Array.IndexOf(lines, line)] = Math.Pow(Convert.ToDouble(temp2[2]), 2);
-                        lpgMean += Convert.ToDouble(temp2[3]);
-                        lpgSdArray[Array.IndexOf(lines, line)] = Math.Pow(Convert.ToDouble(temp2[3]), 2);
+                        unleadedMean += Convert.ToDouble(temp2[4]);
+                        unleadedSdArray[Array.IndexOf(lines, line)] = Math.Pow(Convert.ToDouble(temp2[4]), 2);
+                        dieselMean += Convert.ToDouble(temp2[5]);
+                        dieselSdArray[Array.IndexOf(lines, line)] = Math.Pow(Convert.ToDouble(temp2[5]), 2);
+                        lpgMean += Convert.ToDouble(temp2[6]);
+                        lpgSdArray[Array.IndexOf(lines, line)] = Math.Pow(Convert.ToDouble(temp2[6]), 2);
                         numTotal++;
 
                     }
@@ -310,7 +310,8 @@ namespace Broken_Petrol_Ltd_2
                     double tmp1 = unleadedMean - (3 * unleadedSd);
                     double tmp2 = dieselMean - (3 * dieselSd);
                     double tmp3 = lpgMean - (3 * lpgSd);
-                    if (unleadedMean - (3 * unleadedSd) < 0)
+
+                    if (unleadedMean - (3 * unleadedSd) < 0) //checks if standard deviation is below 0 and if it is to replace the lower boundary with 0 instead.
                     {
                         tmp1 = 0;
                     }
@@ -493,6 +494,7 @@ namespace Broken_Petrol_Ltd_2
             Console.WriteLine($"Unleaded dispensed: {unleaded} litres");
             Console.WriteLine($"Diesel dispensed: {diesel} litres");
             Console.WriteLine($"LPG dispensed: {lpg}litres");
+            Console.WriteLine($"Number of Vehicles that have fuelled: {carsFuelled} | Number of Vehicles that have left: {carsLeft}");
             if (recentVehicle != null)
             {
                 Console.WriteLine($"\nA new {recentVehicle.type} has started fuelling at Pump {recentPumpNum}");
