@@ -12,25 +12,20 @@ namespace Broken_Petrol_Ltd_2
         public System.Timers.Timer fuellingTime;
         public int fuellingTimeInt;
         public System.Timers.Timer waitingTime;
-        public int vehicleID;
-        public bool hasWaited;
-        public bool isFuelling;
-        public bool isFuelled;
-        public Vehicle(int value)
+        public bool hasWaited = false; //will always be true for newly created vehicles
+        public bool isFuelling = false;
+        public bool isFuelled = false;
+        public Vehicle()
         {
             Random rnd = new Random();
 
-            String[] model = { "Car", "Van", "HGV" };
-            int[] maxFuel = { 50, 80, 150 };
+            String[] model = { "Car", "Van", "HGV" }; //types of vehicles that can be created
+            int[] maxFuel = { 50, 80, 150 }; //respective max fuel capacity of those vehicles
             String[] fuelTypes = { "Unleaded", "Diesel", "LPG"};
 
-            waitingTime = new System.Timers.Timer(rnd.Next(1000, 2000));
+            waitingTime = new System.Timers.Timer(rnd.Next(1000, 2000)); //a timer that will only trigger once to signal that the vehicle must leave
             waitingTime.Enabled = true;
             waitingTime.Elapsed += WaitingTime_Elapsed;
-            vehicleID = value; //a unique id that can be used to find a specific vehicle.
-            hasWaited = false;
-            isFuelling = false;
-            isFuelled = false;
 
             int temp = rnd.Next(0, 3); //used to select the vehicle type and hence its max fuel capacity.
 
@@ -46,7 +41,7 @@ namespace Broken_Petrol_Ltd_2
             fuellingTime.Enabled = false;
             if (type.Equals("Car"))
             {
-                fuelType = fuelTypes[rnd.Next(0, 3)]; //Car can use any fuel
+                fuelType = fuelTypes[rnd.Next(0, 3)]; //Car can use any type of fuel
             }
             else if (type.Equals("HGV"))
             {
@@ -61,26 +56,24 @@ namespace Broken_Petrol_Ltd_2
 
         private void WaitingTime_Elapsed(object? sender, ElapsedEventArgs e)
         {
-            this.hasWaited = true;
-            this.waitingTime.Dispose();
-            if (fuellingTime != null)
-            {
-                this.fuellingTime.Dispose();
-            }
+            hasWaited = true;
+            waitingTime.Dispose();
+            fuellingTime.Dispose();
         }
 
         private void FuellingTime_Elapsed(object? sender, ElapsedEventArgs e)
         {
-            this.isFuelled = true;
-            this.fuellingTime.Dispose();
+            isFuelled = true;
+            fuellingTime.Stop();
+            fuellingTime.Dispose();
         }
         public void StartingFuelling()
         {
-            this.waitingTime.Stop();
-            this.waitingTime.Dispose();
-            this.fuellingTime.Enabled = true;
-            this.isFuelling = true;
-            this.waitingTime.Dispose();
+            waitingTime.Stop();
+            waitingTime.Dispose();
+            fuellingTime.Enabled = true;
+            isFuelling = true;
+            waitingTime.Dispose();
         }
     }
 }
