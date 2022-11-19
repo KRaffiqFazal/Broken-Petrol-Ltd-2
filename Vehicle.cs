@@ -5,16 +5,31 @@ namespace Broken_Petrol_Ltd_2
 {
     class Vehicle
     {
-        public String type;
-        public String fuelType;
-        public int maxFuelCapacity;
-        public int fuelInTank;
-        public System.Timers.Timer fuellingTime;
-        public int fuellingTimeInt;
-        public System.Timers.Timer waitingTime;
-        public bool hasWaited = false; //will always be true for newly created vehicles
-        public bool isFuelling = false;
-        public bool isFuelled = false;
+        public String Type
+        {get; set;}
+
+        public String fuelType
+        { get; set;}
+
+        public int maxFuelCapacity
+        { get; set;}
+
+        public int fuelInTank
+        { get; set; }
+
+        public System.Timers.Timer fuellingTime
+        { get; set; }
+        public int fuellingTimeInt
+        { get; set; }
+
+        public System.Timers.Timer waitingTime
+        { get; set; }
+        public bool hasWaited
+        { get; set; }
+        public bool isFuelling
+        { get; set; }
+        public bool isFuelled
+        { get; set; }
         public Vehicle()
         {
             Random rnd = new Random();
@@ -29,7 +44,7 @@ namespace Broken_Petrol_Ltd_2
 
             int temp = rnd.Next(0, 3); //used to select the vehicle type and hence its max fuel capacity.
 
-            type = model[temp]; //the fuel capacity is based off of the type of car and the fuel in the car is based off its max capacity
+            Type = model[temp]; //the fuel capacity is based off of the type of car and the fuel in the car is based off its max capacity
             maxFuelCapacity = maxFuel[temp];
             fuelInTank = rnd.Next(5, maxFuelCapacity / 2);
 
@@ -39,11 +54,11 @@ namespace Broken_Petrol_Ltd_2
             fuellingTime.AutoReset = false;
             fuellingTime.Elapsed += FuellingTime_Elapsed;
             fuellingTime.Enabled = false;
-            if (type.Equals("Car"))
+            if (Type.Equals("Car"))
             {
                 fuelType = fuelTypes[rnd.Next(0, 3)]; //Car can use any type of fuel
             }
-            else if (type.Equals("HGV"))
+            else if (Type.Equals("HGV"))
             {
                 fuelType = fuelTypes[1]; //HGV can only use diesel
             }
@@ -51,6 +66,9 @@ namespace Broken_Petrol_Ltd_2
             {
                 fuelType = fuelTypes[rnd.Next(1, 3)]; //Van can only use diesel or LPG
             }
+            hasWaited = false;
+            isFuelled = false;
+            isFuelling = false;
 
         }
 

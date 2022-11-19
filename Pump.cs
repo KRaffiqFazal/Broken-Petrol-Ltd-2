@@ -2,19 +2,31 @@
 {
     class Pump //each pump will be an object of this class
     {
-        //implement new feature where pumps have finite amount of fuel that can be dispensed, if it runs out the pump cannot be used on that day
-        public int PumpNumber;
-        public double LpgDispensed = 0;
-        public double DieselDispensed = 0;
-        public double UnleadedDispensed = 0;
-        public double TotalUnleadedLeft = 400; //if this reaches 0, the pump cannot be used anymore for unleaded fuels
-        public double TotalDieselLefft = 400;
-        public double TotalLpgLeft = 400;
-        public bool InUse = false;
+        public int PumpNumber
+        { get; set; }
+        public double LpgDispensed
+        { get; set; }
+
+        public double DieselDispensed
+        { get; set; }
+
+        public double UnleadedDispensed
+        { get; set; }
+
+        public bool InUse
+        { get; set; }
+
+        public double EfficiencyPercentage
+        { get; set; }
 
         public Pump(int pumpNum)
         {
             PumpNumber = pumpNum;
+            LpgDispensed = 0;
+            DieselDispensed = 0;
+            UnleadedDispensed = 0;
+            EfficiencyPercentage = 0;
+            InUse = false;
 
         }
 
