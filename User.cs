@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Globalization;
 namespace Broken_Petrol_Ltd_2
 {
     class User
@@ -17,12 +12,14 @@ namespace Broken_Petrol_Ltd_2
         public double totalCost
         { get; set; }
 
-        public double comission 
+    public double comission
         { get; set; }
         public User()
         {
             Username = "............"; //a placeholder value when program loads, same with below
             Password = "************";
+            totalCost = 0;
+            comission = 0;
         }
         
         public String HidePassword()
@@ -42,25 +39,11 @@ namespace Broken_Petrol_Ltd_2
 
         public String CostInString()
         {
-            if (totalCost % 0.1 == 0)
-            {
-                return totalCost.ToString() + "0";
-            }
-            else
-            { 
-                return totalCost.ToString();
-            }
+            return totalCost.ToString("C", CultureInfo.CurrentCulture).Substring(1);
         }
         public String CommissionInString() 
         {
-            if (comission % 0.1 == 0)
-            {
-                return comission.ToString() + "0";
-            }
-            else
-            {
-                return comission.ToString();
-            }
+            return comission.ToString("C", CultureInfo.CurrentCulture).Substring(1);
         }
     }
 }

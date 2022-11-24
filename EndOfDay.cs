@@ -18,6 +18,7 @@ namespace Broken_Petrol_Ltd_2
 				Console.WriteLine($"The amount of Diesel fuel that was dispensed today is: {AllDiesel()} litres");
 				Console.WriteLine($"The amount of LPG fuel that was dispensed today is: {AllLpg()} litres");
 				Console.WriteLine($"The total cost of fuel is £{currentUser.CostInString()} and your 1% is £{currentUser.CommissionInString()}");
+				Console.WriteLine($"The average pump efficiency is {AveragePercentage()}%");
 				Console.WriteLine("Please choose one of the below options by typing its respective number:");
 				Console.WriteLine("[1] View previous day/s results");
 				Console.WriteLine("[2] Delete previous day/s results");
@@ -70,32 +71,18 @@ namespace Broken_Petrol_Ltd_2
 			{
 				using (FileStream records = File.Create(PATH + @"\BrokenPetrolLtd.txt"))
 				{
-					records.Write(todayInBytes, 0, todayInBytes.Length);
+                    File.SetAttributes(PATH + @"\BrokenPetrolLtd.txt", FileAttributes.Normal); //allow it to be read, not hidden and can be written in
+                    records.Write(todayInBytes, 0, todayInBytes.Length);
 				}
+
 
 			}
 			else
 			{
-				File.AppendAllText(PATH + @"\BrokenPetrolLtd.txt", today);
+                File.SetAttributes(PATH + @"\BrokenPetrolLtd.txt", FileAttributes.Normal);
+                File.AppendAllText(PATH + @"\BrokenPetrolLtd.txt", today);
 			}
-		}
-		public static void ErrorDeletion(int index) //function deletes lines that cannot be understood by the computer
-		{
-			String[] lines = null;
-			String[] temp = null;
-			lines = File.ReadAllLines(PATH + @"\BrokenPetrolLtd.txt");
-			lines[index] = null;
-            File.WriteAllText(PATH + @"\BrokenPetrolLtd.txt", string.Empty); //clears the text file
-            foreach (String item in lines)
-            {
-                if (item == null)
-                {
-                    continue;
-                }
-                File.AppendAllText(PATH + @"\BrokenPetrolLtd.txt", item + Environment.NewLine); //rewrites the file line by line
-
-            }
-
+            File.SetAttributes(PATH + @"\BrokenPetrolLtd.txt", FileAttributes.Archive | FileAttributes.Hidden | FileAttributes.ReadOnly); //hides the file to prevent social engineering via employees
         }
 		public static void PreviousDay(int option)
 		{
@@ -115,7 +102,6 @@ namespace Broken_Petrol_Ltd_2
 				}
                 catch //if a line does not conform to this standard it will be ignored and deleted
                 {
-					ErrorDeletion(Array.IndexOf(lines, line));
 					PreviousDay(option);
 					
 				}
@@ -177,12 +163,12 @@ namespace Broken_Petrol_Ltd_2
 					foreach (String line in lines)
 					{
 						temp2 = line.Split(",");
-						unleadedMean += Convert.ToDouble(temp2[3]);
-						unleadedSdArray[Array.IndexOf(lines, line)] = Math.Pow(Convert.ToDouble(temp2[3]), 2);
-						dieselMean += Convert.ToDouble(temp2[4]);
-						dieselSdArray[Array.IndexOf(lines, line)] = Math.Pow(Convert.ToDouble(temp2[4]), 2);
-						lpgMean += Convert.ToDouble(temp2[5]);
-						lpgSdArray[Array.IndexOf(lines, line)] = Math.Pow(Convert.ToDouble(temp2[5]), 2);
+						unleadedMean += Convert.ToDouble(temp2[2]);
+						unleadedSdArray[Array.IndexOf(lines, line)] = Math.Pow(Convert.ToDouble(temp2[2]), 2);
+						dieselMean += Convert.ToDouble(temp2[3]);
+						dieselSdArray[Array.IndexOf(lines, line)] = Math.Pow(Convert.ToDouble(temp2[3]), 2);
+						lpgMean += Convert.ToDouble(temp2[4]);
+						lpgSdArray[Array.IndexOf(lines, line)] = Math.Pow(Convert.ToDouble(temp2[4]), 2);
 						numTotal++;
 
 					}

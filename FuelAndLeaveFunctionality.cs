@@ -27,6 +27,7 @@ namespace Broken_Petrol_Ltd_2
 							unoccupiedCounter[lane[0].PumpNumber - 1].Stop(); //pauses stopwatch when a vehicle starts fuelling
 							lane[0].InUse = true;
 							existingVehicles[i] = null;
+							SortQueue();
 							AddFuel(0, lane);
 							Displayer(fuelling[lane[0].PumpNumber - 1], lane[0].PumpNumber);
 							carsFuelled++;
@@ -38,7 +39,8 @@ namespace Broken_Petrol_Ltd_2
                             unoccupiedCounter[lane[1].PumpNumber - 1].Stop(); //pauses stopwatch when a vehicle starts fuelling
                             lane[1].InUse = true;
 							existingVehicles[i] = null;
-							AddFuel(1, lane);
+                            SortQueue();
+                            AddFuel(1, lane);
 							Displayer(fuelling[lane[1].PumpNumber - 1], lane[1].PumpNumber);
 							carsFuelled++;
 						}
@@ -49,7 +51,8 @@ namespace Broken_Petrol_Ltd_2
                             unoccupiedCounter[lane[2].PumpNumber - 1].Stop(); //pauses stopwatch when a vehicle starts fuelling
                             lane[2].InUse = true;
 							existingVehicles[i] = null;
-							AddFuel(2, lane);
+                            SortQueue();
+                            AddFuel(2, lane);
 							Displayer(fuelling[lane[2].PumpNumber - 1], lane[2].PumpNumber);
 							carsFuelled++;
 						}
@@ -119,7 +122,7 @@ namespace Broken_Petrol_Ltd_2
 						if (temp <= 2) //lane 1
 						{
 							lane1[temp].InUse = false;
-							unoccupiedCounter[temp].Start(); //starts the timer back up once it is unoccupied
+							unoccupiedCounter[temp].Start(); //starts the stopwatch back up once it is unoccupied
 						}
 						else if (temp <= 5) //lane 2
 						{
@@ -132,6 +135,39 @@ namespace Broken_Petrol_Ltd_2
 							unoccupiedCounter[temp].Start();
 						}
 					}
+				}
+			}
+		}
+		public static void SortQueue()
+		{
+			bool sorted = true;
+            int nullCounter = 0;
+            foreach (Vehicle item in existingVehicles)
+            {
+                if (item == null)
+                {
+                    nullCounter++;
+                }
+            }
+			if (nullCounter != existingVehicles.Length) //it is alreaady ordered if there are no vehicles in here
+			{
+                Vehicle[] temp = new Vehicle[existingVehicles.Length]; //a temp array that will store the vehicle array without null items
+				for (int i = 0; i < temp.Length; i++)
+				{
+					temp[i] = null;
+				}
+				int counter = 0;
+				for (int i = 0; i < existingVehicles.Length; i++)
+				{
+					if (existingVehicles[i] != null)
+					{
+						temp[counter] = existingVehicles[i];
+						counter++;
+					}
+				}
+				for (int i = 0; i < existingVehicles.Length; i++)
+				{
+					existingVehicles[i] = temp[i];
 				}
 			}
 		}

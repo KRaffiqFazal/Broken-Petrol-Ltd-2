@@ -6,13 +6,16 @@ using System.Timers;
 using System.Diagnostics;
 using System.ComponentModel;
 
-namespace Broken_Petrol_Ltd_2 //make text file uneditable by an employee, create new text file to store path, fuel costs and login details, cost and commision in string does not function appropriately please change it
+namespace Broken_Petrol_Ltd_2 //make text file uneditable by an employee, create new text file to store path, fuel costs and login details
 {
-    partial class Program //forecourt stopwatch does not seem to work correctly
+    partial class Program
     {
-        static String PATH = @"C:\Users\raffi\source\repos\Broken Petrol Ltd 2"; //message to end-user: please replace this with the path of the program on the petrol station console
-        
-        const double UNLEADED_COST = 1.6638, DIESEL_COST = 1.9051, LPG_COST = 0.8939; //number of pounds per litre
+        static String PATH = System.Reflection.Assembly.GetExecutingAssembly().Location; //Automatically finds the directory to reduce what the end user needs to do
+
+        static double UNLEADED_COST, DIESEL_COST, LPG_COST; //number of pounds per litre
+
+        static List<String> username = new List<String>();
+        static List<String> password = new List<String>(); //values will be found via a file, but making them accessible to other functions allows them to be changed without needing a function to call and change it
 
         const int DAY_LENGTH = 30000; //the length of a day in the program in milliseconds
         static Vehicle[] existingVehicles = new Vehicle[5], fuelling = new Vehicle[9]; //5 vehicles can wait at one time and 9 vehicles can be fulled (at each pump) at the same time
@@ -36,7 +39,16 @@ namespace Broken_Petrol_Ltd_2 //make text file uneditable by an employee, create
             System.Threading.Timer carAdder = new System.Threading.Timer(CarAdder, null, 0, rnd.Next(1500, 2201));
             System.Threading.Timer ender = new System.Threading.Timer(Stopper, null, Timeout.Infinite, 0);
             bool temp = false; //used to run a function after the login only once which starts the ender timer
-            Login(0, 3);
+            if (!cont)
+            {
+                PATH = PATH.Substring(0, PATH.IndexOf(@"Broken Petrol Ltd 2\") + @"Broken Petrol Ltd 2\".Length - 1);//works out the path of the program by getting rid of directories that I do not want to store text files in
+            }
+            UpdateLogins();
+            UpdatePrices();//makes sure that logins and prices are the newest versions 
+            if (!cont)
+            {
+                Login(0, 3);
+            }
             while (cont) //cont will become false once the "day" is over, this stops vehicles from being assigned/kicked/leaving.
             {
                 if (cont && !temp) //run one time once correct username/password used

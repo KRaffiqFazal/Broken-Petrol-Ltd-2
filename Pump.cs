@@ -1,4 +1,6 @@
-﻿namespace Broken_Petrol_Ltd_2
+﻿using System.Globalization;
+
+namespace Broken_Petrol_Ltd_2
 {
     class Pump //each pump will be an object of this class
     {
@@ -28,6 +30,10 @@
             EfficiencyPercentage = 0;
             InUse = false;
 
+        }
+        public String EfficiencyPercentageString()
+        {
+            return EfficiencyPercentage.ToString("C", CultureInfo.CurrentCulture).Substring(1);
         }
 
 
