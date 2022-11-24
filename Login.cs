@@ -38,7 +38,7 @@ namespace Broken_Petrol_Ltd_2
 				if (currentUser.Username.Equals(managerLogins[0]) && currentUser.Password.Equals(managerLogins[1]))
 				{
 					currentUser.ClearFields();
-                    ManagerLogin();
+                    ManagerLogin(false);
 				}
                 if (temp1 == -1 || temp2 == -1 || temp1 != temp2)
 				{
@@ -133,31 +133,34 @@ namespace Broken_Petrol_Ltd_2
             {
                 using (FileStream records = File.Create(PATH + @"\PricesUsers.txt"))
                 {
-                    File.SetAttributes(PATH + @"PricesUsers.txt", FileAttributes.Normal); //allow it to be read, not hidden and can be written in
+                    File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Normal); //allow it to be read, not hidden and can be written in
 
                     Byte[] reload = new UTF8Encoding(true).GetBytes("1.6225,1.8656,0.8635" + Environment.NewLine + "Admin,Admin12" + Environment.NewLine + "Admin1,Admin123" + Environment.NewLine + "Admin2,Admin1234"); //unleaded, diesel, lpg prices per litre in GBP to be set as these as default, the next lines are basic logins that can be viewed/changed via other options
                     records.Write(reload, 0, reload.Length);
                 }
             }
         }
-		public static void ManagerLogin()
+		public static void ManagerLogin(bool login)
 		{
 			Console.Clear(); //need to create a file, work out where to put it and find a way to make login read its contents into that file, then might be done
-            DateTime now = DateTime.Now;
-            if (!File.Exists(PATH + @"\Log.txt")) //PATH is where the directory of this program, the text file should be in this directory and remain here, however if maliciously deleted, the program does not stop running
-            {
-                using (FileStream logger = File.Create(PATH + @"\Log.txt"))
-                {
-                    File.SetAttributes(PATH + @"\Log.txt", FileAttributes.Normal); //allow it to be read, not hidden and can be written in
-                    Byte[] logged = new UTF8Encoding(true).GetBytes(now.ToString() + Environment.NewLine);
-                    logger.Write(logged, 0, logged.Length);
-                }
-            }
-            else
-            {
-                File.SetAttributes(PATH + @"\Log.txt", FileAttributes.Normal);
-                File.AppendAllText(PATH + @"\Log.txt", now.ToString() + Environment.NewLine);
-            } //this is used to log that the manager had logged in at this point in time
+			if (!login)
+			{
+				DateTime now = DateTime.Now;
+				if (!File.Exists(PATH + @"\Log.txt")) //PATH is where the directory of this program, the text file should be in this directory and remain here, however if maliciously deleted, the program does not stop running
+				{
+					using (FileStream logger = File.Create(PATH + @"\Log.txt"))
+					{
+						File.SetAttributes(PATH + @"\Log.txt", FileAttributes.Normal); //allow it to be read, not hidden and can be written in
+						Byte[] logged = new UTF8Encoding(true).GetBytes(now.ToString() + Environment.NewLine);
+						logger.Write(logged, 0, logged.Length);
+					}
+				}
+				else
+				{
+					File.SetAttributes(PATH + @"\Log.txt", FileAttributes.Normal);
+					File.AppendAllText(PATH + @"\Log.txt", now.ToString() + Environment.NewLine);
+				} //this is used to log that the manager had logged in at this point in time
+			}
             if (!File.Exists(PATH + @"\PricesUsers.txt")) //PATH is where the directory of this program, the text file should be in this directory and remain here, however if maliciously deleted, the program does not stop running
             {
                 using (FileStream records = File.Create(PATH + @"\PricesUsers.txt"))
@@ -201,7 +204,7 @@ namespace Broken_Petrol_Ltd_2
 					Thread.Sleep(500);
 					break;
 			}
-			ManagerLogin();
+			ManagerLogin(true);
 		}
 
 	}

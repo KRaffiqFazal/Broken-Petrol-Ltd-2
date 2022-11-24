@@ -30,7 +30,7 @@ namespace Broken_Petrol_Ltd_2
 					index = 2;
 					break;
 				case "4":
-					ManagerLogin();
+					ManagerLogin(true);
 					break;
 				default:
 					Console.WriteLine("Please enter a valid option");
@@ -40,33 +40,24 @@ namespace Broken_Petrol_Ltd_2
 			Console.WriteLine($"Please enter the new price of {fuels[index]} in pence per litre");
 			try
 			{
-				temp = Convert.ToDouble(Console.ReadLine()); //will use this value to replace the first line
+				temp = Convert.ToDouble(Console.ReadLine()); //will use this value to replace the desired temp in the first line
 			}
 			catch
 			{
 				Console.WriteLine("Please enter a valid value");
+				Thread.Sleep(500);
 				FuelPriceChange();
 			}
 			String[] temp2;
+			String[] temp3;
 			double[] newPrices = new double[3];
 			temp2 = File.ReadAllLines(PATH + @"\PricesUsers.txt");
-			temp2 = temp2[index].Split(",");
-			for (int i = 0; i < newPrices.Length; i++)
-			{
-				newPrices[i] = Convert.ToDouble(temp2[i]);
-			}
-			newPrices[index] = temp / 100; //sets the entered price as the new price and will read this line into the text file
-			temp2 = File.ReadAllLines(PATH + @"\PricesUsers.txt");
-			option = null; //reusing the option variable to save memory
-			foreach (double price in newPrices)
-			{
-				option += Convert.ToString(price);
-				option += ",";
-			}
-			option = option.Substring(0, option.Length - 1); //chop off last comma as it is unneeded
-			temp2[index] = option;
+			temp2 = temp2[0].Split(",");
+			temp2[index] = Convert.ToString(temp / 100);
+			temp3 = File.ReadAllLines(PATH + @"\PricesUsers.txt");
+			temp3[0] = temp2[0] + "," + temp2[1] + "," + temp2[2];
 			File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Normal);
-			File.WriteAllLines(PATH + @"\PricesUsers.txt", temp2);
+			File.WriteAllLines(PATH + @"\PricesUsers.txt", temp3);
 			File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Archive | FileAttributes.Hidden | FileAttributes.ReadOnly);
 			UpdateLogins();
 			UpdatePrices();
@@ -92,7 +83,7 @@ namespace Broken_Petrol_Ltd_2
 				int option = Convert.ToInt32(Console.ReadLine());
 				if (option == temp.Length) //to go back
 				{
-					ManagerLogin();
+					ManagerLogin(true);
 				}
 				else if (option < 1 || option > temp.Length) //not within the options allowed
 				{
@@ -104,16 +95,17 @@ namespace Broken_Petrol_Ltd_2
 				String newUsername = Console.ReadLine();
 				Console.WriteLine("Please enter a new password");
 				String newPassword = Console.ReadLine();
-				if (newUsername.Equals(managerLogins[0]) || newPassword.Equals(managerLogins[1]) || username.IndexOf(newUsername) == password.IndexOf(newPassword) || username.IndexOf(newUsername) != -1)
+				if (newUsername.Equals(managerLogins[0]) || newPassword.Equals(managerLogins[1]) || username.IndexOf(newUsername) != -1 || password.IndexOf(newPassword) != -1)
 				{
 					Console.WriteLine("These details match that within the system, please enter new values");
+					Thread.Sleep(900);
 					EmployeeLoginChange();
 				}
 				String replaceDetails = newUsername + "," + newPassword;
 				temp[option] = replaceDetails;
 				File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Normal);
                 File.WriteAllLines(PATH + @"\PricesUsers.txt", temp);
-				File.SetAttributes(PATH, FileAttributes.Archive | FileAttributes.Hidden | FileAttributes.ReadOnly);
+				File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Archive | FileAttributes.Hidden | FileAttributes.ReadOnly);
 				UpdateLogins();
                 EmployeeLoginChange();
 			}
@@ -135,7 +127,7 @@ namespace Broken_Petrol_Ltd_2
 			}
 			Console.WriteLine("Please press any key to go back");
 			Console.ReadKey();
-			ManagerLogin();
+			ManagerLogin(true);
         }
 	}
 }

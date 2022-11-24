@@ -97,7 +97,8 @@ namespace Broken_Petrol_Ltd_2
 				try
 				{
 					temp2 = line.Split(",");
-					Console.WriteLine($"[{i + 1}] Date: {temp2[0]} | User: {temp2[1]} | Unleaded Sold: {temp2[2]} | Diesel Sold: {temp2[3]} | LPG Sold: {temp2[4]} | Cost of Fuel: £{temp2[5]} | Commission Cost: £{temp2[6]} | Cars Fuelled: {temp2[7]} | Cars Left: {temp2[8]} | Average Pump Efficiency: {temp2[9]}%");
+					Console.WriteLine($"[{i + 1}] Date: {temp2[0]} | User: {temp2[1]} | Unleaded Sold: {temp2[2]} | Diesel Sold: {temp2[3]} " +
+						$"\n    LPG Sold: {temp2[4]} | Cost of Fuel: £{temp2[5]} | Commission Cost: £{temp2[6]} | Cars Fuelled: {temp2[7]} | Cars Left: {temp2[8]} | Average Pump Efficiency: {temp2[9]}%");
 					i++;
 				}
                 catch //if a line does not conform to this standard it will be ignored and deleted
