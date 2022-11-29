@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Broken_Petrol_Ltd_2
 {
 	partial class Program
@@ -66,15 +68,19 @@ namespace Broken_Petrol_Ltd_2
 			if (fuelling[lane[laneNum].PumpNumber - 1].fuelType.Equals("Unleaded"))
 			{
 				lane[laneNum].UnleadedDispensed += (fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5; //based on how long the vehicle was meant to fuel for, divided by 1000 to get the time in seconds and multiplied by 1.5 to work out how much fuel was dispensed
+				todayLog.Add(fuelling[lane[laneNum].PumpNumber - 1].Type + " has fuelled at Pump: " + lane[laneNum].PumpNumber + " and has purchased £" + ((fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5 * UNLEADED_COST).ToString("C", CultureInfo.CurrentCulture).Substring(1) + " of unleaded" + Environment.NewLine);
 			}
 			else if (fuelling[lane[laneNum].PumpNumber - 1].fuelType.Equals("Diesel"))
 			{
 				lane[laneNum].DieselDispensed += (fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5;
-			}
+               todayLog.Add(fuelling[lane[laneNum].PumpNumber - 1].Type + " has fuelled at Pump: " + lane[laneNum].PumpNumber + " and has purchased £" + ((fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5 * DIESEL_COST).ToString("C", CultureInfo.CurrentCulture).Substring(1) + " of diesel" + Environment.NewLine);
+            }
 			else
 			{
 				lane[laneNum].LpgDispensed += (fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5;
-			}
+                todayLog.Add(fuelling[lane[laneNum].PumpNumber - 1].Type + " has fuelled at Pump: " + lane[laneNum].PumpNumber + " and has purchased £" + ((fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5 * LPG_COST).ToString("C", CultureInfo.CurrentCulture).Substring(1) + " of LPG" + Environment.NewLine);
+				
+            }
 		}
 		public static void WaitKick() //an method that will run throughout the entire program to ensure that vehicles are kicked from the list if they finish waiting
 		{

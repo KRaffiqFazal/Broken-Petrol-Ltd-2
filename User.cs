@@ -45,6 +45,11 @@ namespace Broken_Petrol_Ltd_2
         {
             return comission.ToString("C", CultureInfo.CurrentCulture).Substring(1);
         }
+
+        public String Wages()
+        {
+            return (comission + 12.49 * 8).ToString("C", CultureInfo.CurrentCulture).Substring(1);
+        }
     }
 }
 

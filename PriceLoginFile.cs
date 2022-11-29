@@ -58,7 +58,7 @@ namespace Broken_Petrol_Ltd_2
 			temp3[0] = temp2[0] + "," + temp2[1] + "," + temp2[2];
 			File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Normal);
 			File.WriteAllLines(PATH + @"\PricesUsers.txt", temp3);
-			File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Archive | FileAttributes.Hidden | FileAttributes.ReadOnly);
+			File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Hidden | FileAttributes.ReadOnly);
 			UpdateLogins();
 			UpdatePrices();
 			FuelPriceChange();
@@ -95,9 +95,9 @@ namespace Broken_Petrol_Ltd_2
 				String newUsername = Console.ReadLine();
 				Console.WriteLine("Please enter a new password");
 				String newPassword = Console.ReadLine();
-				if (newUsername.Equals(managerLogins[0]) || newPassword.Equals(managerLogins[1]) || username.IndexOf(newUsername) != -1 || password.IndexOf(newPassword) != -1)
+				if (newUsername.Equals(managerLogins[0]) || newPassword.Equals(managerLogins[1]) || (username.IndexOf(newUsername) != -1  && username.IndexOf(newUsername) != option - 1) || (password.IndexOf(newPassword) != -1 && password.IndexOf(newPassword) != option - 1) || newUsername.IndexOf(",") != -1 || newPassword.IndexOf(",") != -1)
 				{
-					Console.WriteLine("These details match that within the system, please enter new values");
+					Console.WriteLine("These details are not valid, please don't use ',' or match other values in the system");
 					Thread.Sleep(900);
 					EmployeeLoginChange();
 				}
@@ -105,7 +105,7 @@ namespace Broken_Petrol_Ltd_2
 				temp[option] = replaceDetails;
 				File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Normal);
                 File.WriteAllLines(PATH + @"\PricesUsers.txt", temp);
-				File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Archive | FileAttributes.Hidden | FileAttributes.ReadOnly);
+				File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Hidden | FileAttributes.ReadOnly);
 				UpdateLogins();
                 EmployeeLoginChange();
 			}
@@ -119,7 +119,10 @@ namespace Broken_Petrol_Ltd_2
 
 		public static void ManagerLog()
 		{
+			Console.Clear();
+			File.SetAttributes(PATH + @"\Log.txt", FileAttributes.Normal);
 			String[] log = File.ReadAllLines(PATH + @"\Log.txt");
+			File.SetAttributes(PATH + @"\Log.txt", FileAttributes.ReadOnly | FileAttributes.Hidden);
 			Console.WriteLine("This is the manager login log");
 			foreach (String line in log)
 			{

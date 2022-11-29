@@ -12,12 +12,13 @@ namespace Broken_Petrol_Ltd_2
 				currentUser.totalCost = Math.Round(AllUnleaded() * UNLEADED_COST + AllDiesel() * DIESEL_COST + AllLpg() * LPG_COST, 2);
 				currentUser.comission = Math.Round(currentUser.totalCost / 100, 2);
 				Console.WriteLine($"The Day has ended {currentUser.Username}, please note the following:");
-				Console.WriteLine($"The number of cars that were fuelled today is: {carsFuelled}");
-				Console.WriteLine($"The number of cars that left before fuelling today is: {carsLeft}");
+				Console.WriteLine($"The number of vehicles that were fuelled today is: {carsFuelled}");
+				Console.WriteLine($"The number of vehicles that left before fuelling today is: {carsLeft}");
 				Console.WriteLine($"The amount of Unleaded fuel that was dispensed today is: {AllUnleaded()} litres");
 				Console.WriteLine($"The amount of Diesel fuel that was dispensed today is: {AllDiesel()} litres");
 				Console.WriteLine($"The amount of LPG fuel that was dispensed today is: {AllLpg()} litres");
 				Console.WriteLine($"The total cost of fuel is £{currentUser.CostInString()} and your 1% is £{currentUser.CommissionInString()}");
+				Console.WriteLine($"Your wages based on your work today is £{currentUser.Wages()}");
 				Console.WriteLine($"The average pump efficiency is {AveragePercentage()}%");
 				Console.WriteLine("Please choose one of the below options by typing its respective number:");
 				Console.WriteLine("[1] View previous day/s results");
@@ -65,7 +66,7 @@ namespace Broken_Petrol_Ltd_2
 		public static void WriteToFile()
 		{
 			DateTime temp = DateTime.Today;
-			String today = temp + "," + currentUser.Username + "," + AllUnleaded() + "," + AllDiesel() + "," + AllLpg() + "," + currentUser.CostInString() + "," + currentUser.CommissionInString() + "," + carsFuelled + "," + carsLeft + "," + AveragePercentage().ToString() + "," + Environment.NewLine;
+			String today = temp.ToString().Substring(0, temp.ToString().Length - 9) + "," + currentUser.Username + "," + AllUnleaded() + "," + AllDiesel() + "," + AllLpg() + "," + currentUser.CostInString() + "," + currentUser.Wages() + "," + carsFuelled + "," + carsLeft + "," + AveragePercentage() + "," + Environment.NewLine;
             Byte[] todayInBytes = new UTF8Encoding(true).GetBytes(today); //what needs to be written to a file as a byte data type
 			if (!File.Exists(PATH + @"\BrokenPetrolLtd.txt")) //PATH is where the directory of this program, the text file should be in this directory from previous days of use, if not, its created.
 			{
@@ -82,8 +83,26 @@ namespace Broken_Petrol_Ltd_2
                 File.SetAttributes(PATH + @"\BrokenPetrolLtd.txt", FileAttributes.Normal);
                 File.AppendAllText(PATH + @"\BrokenPetrolLtd.txt", today);
 			}
-            File.SetAttributes(PATH + @"\BrokenPetrolLtd.txt", FileAttributes.Archive | FileAttributes.Hidden | FileAttributes.ReadOnly); //hides the file to prevent social engineering via employees
+            File.SetAttributes(PATH + @"\BrokenPetrolLtd.txt", FileAttributes.Hidden | FileAttributes.ReadOnly); //hides the file to prevent social engineering via employees
         }
+		public static void LogChecker()
+		{
+			if (!Directory.Exists(PATH + @"\Logs"))
+			{
+				Directory.CreateDirectory(PATH + @"\Logs");
+			}
+		}
+		public static void LogDisplay() //displays all transactions for the day
+		{
+			Console.Clear();
+			String[] lines = File.ReadAllLines(PATH + @"\Logs\" + logDay + ".txt");
+			foreach (String line in lines) 
+			{
+				Console.WriteLine(line);
+			}
+			Console.WriteLine("\nThis will be saved in the Logs folder, press any key to continue.");
+			Console.ReadKey();
+		}
 		public static void PreviousDay(int option)
 		{
 			String[] lines = null;
@@ -98,7 +117,8 @@ namespace Broken_Petrol_Ltd_2
 				{
 					temp2 = line.Split(",");
 					Console.WriteLine($"[{i + 1}] Date: {temp2[0]} | User: {temp2[1]} | Unleaded Sold: {temp2[2]} | Diesel Sold: {temp2[3]} " +
-						$"\n    LPG Sold: {temp2[4]} | Cost of Fuel: £{temp2[5]} | Commission Cost: £{temp2[6]} | Cars Fuelled: {temp2[7]} | Cars Left: {temp2[8]} | Average Pump Efficiency: {temp2[9]}%");
+						$"\n     LPG Sold: {temp2[4]} | Cost of Fuel: £{temp2[5]} | Wages Earned: £{temp2[6]} | Cars Fuelled: {temp2[7]}" +
+						$"\n     Cars Left: {temp2[8]} | Average Pump Efficiency: {temp2[9]}%\n");
 					i++;
 				}
                 catch //if a line does not conform to this standard it will be ignored and deleted
@@ -130,6 +150,7 @@ namespace Broken_Petrol_Ltd_2
 							Thread.Sleep(2000);
 							EndOfTheDay();
 						}
+						File.SetAttributes(PATH + @"\\BrokenPetrolLtd.txt", FileAttributes.Normal); //allows file to be written into
 						File.WriteAllText(PATH + @"\BrokenPetrolLtd.txt", string.Empty); //clears the text file
 						foreach (String line in lines)
 						{
@@ -140,12 +161,15 @@ namespace Broken_Petrol_Ltd_2
 							File.AppendAllText(PATH + @"\BrokenPetrolLtd.txt", line + Environment.NewLine); //rewrites the file line by line
 
 						}
+						File.SetAttributes(PATH + @"\BrokenPetrolLtd.txt", FileAttributes.ReadOnly | FileAttributes.Hidden);
+
 						Console.WriteLine("Press any key to go back.");
 						Console.ReadKey();
 					}
-					catch
+					catch(Exception ex)
 					{
 						Console.WriteLine("Something has gone wrong.");
+						Console.WriteLine(ex.Message);
 						Thread.Sleep(500);
 						EndOfTheDay();
 					}

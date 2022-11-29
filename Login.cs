@@ -1,4 +1,5 @@
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Broken_Petrol_Ltd_2
 {
@@ -9,7 +10,7 @@ namespace Broken_Petrol_Ltd_2
 		{
 			UpdateLogins();
 			Console.Clear();
-            File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Archive | FileAttributes.Hidden | FileAttributes.ReadOnly);
+            File.SetAttributes(PATH + @"\PricesUsers.txt", FileAttributes.Hidden | FileAttributes.ReadOnly);
             Console.WriteLine("|-------BROKEN PETROL LTD TERMINAL-------|\n");
 			Console.WriteLine($"ATTEMPTS LEFT: {tries}\n");
 			Console.WriteLine($"USERNAME:{currentUser.Username}\n");
@@ -197,7 +198,7 @@ namespace Broken_Petrol_Ltd_2
 
 				case "4":
 					Environment.Exit(0);
-					break;
+                    break;
 
 				default:
 					Console.WriteLine("The option is unrecognised, please try again");

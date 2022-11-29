@@ -17,7 +17,7 @@ namespace Broken_Petrol_Ltd_2
 				if (existingVehicles[i] == null)
 				{
 					existingVehicles[i] = new Vehicle();
-					j = 0;
+					j = 0; //breaks out of the loop if a vehicle has been added
 				}
 			}
 		}
