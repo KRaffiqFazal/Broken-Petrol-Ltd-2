@@ -38,11 +38,11 @@ namespace Broken_Petrol_Ltd_2
 						{
 							fuelling[lane[1].PumpNumber - 1] = existingVehicles[i];
 							fuelling[lane[1].PumpNumber - 1].StartingFuelling();
-                            unoccupiedCounter[lane[1].PumpNumber - 1].Stop(); //pauses stopwatch when a vehicle starts fuelling
-                            lane[1].InUse = true;
+                            				unoccupiedCounter[lane[1].PumpNumber - 1].Stop(); //pauses stopwatch when a vehicle starts fuelling
+                            				lane[1].InUse = true;
 							existingVehicles[i] = null;
-                            SortQueue();
-                            AddFuel(1, lane);
+                            				SortQueue();
+                            				AddFuel(1, lane);
 							Displayer(fuelling[lane[1].PumpNumber - 1], lane[1].PumpNumber);
 							carsFuelled++;
 						}
@@ -50,11 +50,11 @@ namespace Broken_Petrol_Ltd_2
 						{
 							fuelling[lane[2].PumpNumber - 1] = existingVehicles[i];
 							fuelling[lane[2].PumpNumber - 1].StartingFuelling();
-                            unoccupiedCounter[lane[2].PumpNumber - 1].Stop(); //pauses stopwatch when a vehicle starts fuelling
-                            lane[2].InUse = true;
+				                        unoccupiedCounter[lane[2].PumpNumber - 1].Stop(); //pauses stopwatch when a vehicle starts fuelling
+				                        lane[2].InUse = true;
 							existingVehicles[i] = null;
-                            SortQueue();
-                            AddFuel(2, lane);
+				                        SortQueue();
+				                        AddFuel(2, lane);
 							Displayer(fuelling[lane[2].PumpNumber - 1], lane[2].PumpNumber);
 							carsFuelled++;
 						}
@@ -68,17 +68,17 @@ namespace Broken_Petrol_Ltd_2
 			if (fuelling[lane[laneNum].PumpNumber - 1].fuelType.Equals("Unleaded"))
 			{
 				lane[laneNum].UnleadedDispensed += (fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5; //based on how long the vehicle was meant to fuel for, divided by 1000 to get the time in seconds and multiplied by 1.5 to work out how much fuel was dispensed
-				todayLog.Add(fuelling[lane[laneNum].PumpNumber - 1].Type + " has fuelled at Pump: " + lane[laneNum].PumpNumber + " and has purchased £" + ((fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5 * UNLEADED_COST).ToString("C", CultureInfo.CurrentCulture).Substring(1) + " of unleaded" + Environment.NewLine);
+				todayLog.Add(fuelling[lane[laneNum].PumpNumber - 1].Type + " has fuelled at Pump: " + lane[laneNum].PumpNumber + " and has purchased Â£" + ((fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5 * UNLEADED_COST).ToString("C", CultureInfo.CurrentCulture).Substring(1) + " of unleaded" + Environment.NewLine);
 			}
 			else if (fuelling[lane[laneNum].PumpNumber - 1].fuelType.Equals("Diesel"))
 			{
 				lane[laneNum].DieselDispensed += (fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5;
-               todayLog.Add(fuelling[lane[laneNum].PumpNumber - 1].Type + " has fuelled at Pump: " + lane[laneNum].PumpNumber + " and has purchased £" + ((fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5 * DIESEL_COST).ToString("C", CultureInfo.CurrentCulture).Substring(1) + " of diesel" + Environment.NewLine);
+               todayLog.Add(fuelling[lane[laneNum].PumpNumber - 1].Type + " has fuelled at Pump: " + lane[laneNum].PumpNumber + " and has purchased Â£" + ((fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5 * DIESEL_COST).ToString("C", CultureInfo.CurrentCulture).Substring(1) + " of diesel" + Environment.NewLine);
             }
 			else
 			{
 				lane[laneNum].LpgDispensed += (fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5;
-                todayLog.Add(fuelling[lane[laneNum].PumpNumber - 1].Type + " has fuelled at Pump: " + lane[laneNum].PumpNumber + " and has purchased £" + ((fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5 * LPG_COST).ToString("C", CultureInfo.CurrentCulture).Substring(1) + " of LPG" + Environment.NewLine);
+                todayLog.Add(fuelling[lane[laneNum].PumpNumber - 1].Type + " has fuelled at Pump: " + lane[laneNum].PumpNumber + " and has purchased Â£" + ((fuelling[lane[laneNum].PumpNumber - 1].fuellingTimeInt / 1000) * 1.5 * LPG_COST).ToString("C", CultureInfo.CurrentCulture).Substring(1) + " of LPG" + Environment.NewLine);
 				
             }
 		}
